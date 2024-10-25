@@ -67,6 +67,44 @@ from shift.constants import (
 )
 from shift.utils import df_validator
 
+# buildings = [
+#     "apartments", "barracks", "bungalow", "cabin", "detached", "annexe", 
+#     "dormitory", "farm", "ger", "hotel", "house", "houseboat", "residential", 
+#     "semidetached_house", "static_caravan", "stilt_house", "terrace", 
+#     "tree_house", "trullo", "commercial", "industrial", "kiosk", "office", 
+#     "retail", "supermarket", "warehouse", "religious", "cathedral", "chapel", 
+#     "church", "kingdom_hall", "monastery", "mosque", "presbytery", "shrine", 
+#     "synagogue", "temple", "bakehouse", "bridge", "civic", "college", 
+#     "fire_station", "government", "gatehouse", "hospital", "kindergarten", 
+#     "museum", "public", "school", "toilets", "train_station", "transportation", 
+#     "university", "barn", "conservatory", "cowshed", "farm_auxiliary", 
+#     "greenhouse", "slurry_tank", "stable", "sty", "livestock", "grandstand", 
+#     "pavilion", "riding_hall", "sports_hall", "sports_centre", "stadium", 
+#     "allotment_house", "boathouse", "hangar", "hut", "shed", "carport", 
+#     "garage", "garages", "parking", "digester", "service", "tech_cab", 
+#     "transformer_tower", "water_tower", "storage_tank", "silo", "beach_hut", 
+#     "bunker", "castle", "construction", "container", "guardhouse", "military", 
+#     "outbuilding", "pagoda", "quonset_hut", "roof", "ruins", "tent", "tower", 
+#     "windmill"
+# ]
+
+
+building_tags = [
+    "apartments", "bungalow", "cabin", "detached", "annexe", 
+    "dormitory", "farm", "hotel", 
+    "semidetached_house", "static_caravan", "stilt_house", "terrace", 
+    "commercial", "industrial", "kiosk", "office", 
+    "retail", "supermarket", "warehouse", "religious", "cathedral", "chapel", 
+    "church", "bakehouse", "civic", "college", 
+    "fire_station", "government", "gatehouse", "hospital", "kindergarten", 
+    "museum", "public", "school", "train_station", "transportation", 
+    "university", "barn", "conservatory", "cowshed", "farm_auxiliary", 
+    "greenhouse", "slurry_tank", "stable", "sty", "livestock", "grandstand", 
+    "pavilion", "riding_hall", "sports_hall", "sports_centre", "stadium", 
+    "allotment_house",  "service", "tech_cab", 
+    "transformer_tower", "water_tower", "storage_tank", "silo", 
+    "construction", "container", "guardhouse", "military","outbuilding"
+]
 
 class Geometry(ABC):
     """Interface for Geometry object."""
@@ -308,8 +346,8 @@ class BuildingsFromPoint(OpenStreetBuildingGeometries):
 
     def get_gdf(self) -> pd.DataFrame:
         """Refer to base class for details."""
-        return ox.geometries_from_point(
-            self.point, {"building": True}, dist=self.max_dist
+        return ox.features_from_point(
+            self.point, {"building": building_tags}, dist=self.max_dist
         )
 
 
@@ -338,10 +376,12 @@ class BuildingsFromPlace(OpenStreetBuildingGeometries):
 
     def get_gdf(self) -> pd.DataFrame:
         """Refer to base class for details."""
-        return ox.geometries_from_address(
-            self.place, {"building": True}, dist=self.max_dist
+        # return ox.geometries_from_address(
+        #     self.place, {"building": True}, dist=self.max_dist
+        # )
+        return ox.features_from_address(
+            self.place, {"building": building_tags}, dist=self.max_dist
         )
-
 
 class BuildingsFromPolygon(OpenStreetBuildingGeometries):
     """Getting building geometries from a given polygon.
@@ -362,4 +402,5 @@ class BuildingsFromPolygon(OpenStreetBuildingGeometries):
 
     def get_gdf(self) -> pd.DataFrame:
         """Refer to base class for details."""
-        return ox.geometries_from_polygon(self.polygon, {"building": True})
+        #return ox.geometries_from_polygon(self.polygon, {"building": True})
+        return ox.features_from_polygon(self.polygon, {"building": building_tags})
