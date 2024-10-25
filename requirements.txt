@@ -7,7 +7,7 @@ plotly
 numpy
 networkx
 pandas
-sklearn
+scikit-learn
 pydantic
 click
 pytest
